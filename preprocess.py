@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 import glob
 from operator import add
-
+import cv2
 path="/home/rdey/DSP_p3/DSP_003/"
 #path="D:\DSP_003/"
 
@@ -11,15 +11,21 @@ for i in range(0,19):
 	print(i)
 	counter=0
 	temp=[]
-	var_to_add=np.zeros((512,512), dtype=np.float32).tolist()
-	for file in glob.glob(path+str(i)+"/images/*.tiff"):
-		im = ((np.array(Image.open(file))).astype(np.float32)).tolist()
-		var_to_add=map(add,var_to_add,im)
-		if(counter==250 or counter==(len(glob.glob(path+str(i)+"/images/*.tiff"))-1)):
-			temp.append(var_to_add)
-			var_to_add=np.zeros((512,512), dtype=np.float32).tolist()
+	var_to_add=np.zeros((512,512), dtype=np.float32)
+	for file in sorted(glob.glob(path+str(i)+"/images/*.tiff")):
+		#print(file)
+		im = ((np.array(Image.open(file))).astype(np.float32))
+		im=im/np.amax(im)
+		im=cv2.resize(im,(512, 512))
 
-	X_train.append(temp)
+		var_to_add=(((var_to_add)+(im))/2.0)
+		
+
+	X_train.append(var_to_add)
+	print(np.array(X_train).shape)
+	
+	cv2.imwrite(str(i)+".png",(var_to_add/np.amax(var_to_add))*255)
+
 np.save("X_train",np.array(X_train))
 
 
