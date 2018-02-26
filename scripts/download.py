@@ -3,6 +3,7 @@ import argparse
 import os
 import sys
 import zipfile
+import shutil
 
 """
 Convenience script that downloads a customizable subset of the data with a really simple progress printout
@@ -38,9 +39,14 @@ for dataset in datasets:
     filename = "neurofinder."+dataset+".zip"
     output_dir = args.output
     output_path = os.path.join(output_dir, filename)
+
     # ensure output_dir exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # if the dataset has been downloaded before, remove the old version
+    if os.path.exists(os.path.join(output_dir, 'neurofinder.' + dataset)):
+        shutil.rmtree(os.path.join(output_dir, 'neurofinder.' + dataset))
 
     # path to raw image data in the dsp-uga bucket
     data_url = "https://s3.amazonaws.com/neuro.datasets/challenges/neurofinder/" + filename
