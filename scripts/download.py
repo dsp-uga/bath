@@ -43,7 +43,7 @@ for dataset in datasets:
         os.makedirs(output_dir)
 
     # path to raw image data in the dsp-uga bucket
-    data_url = "https://storage.googleapis.com/uga-dsp/project3/" + filename
+    data_url = "https://s3.amazonaws.com/neuro.datasets/challenges/neurofinder/" + filename
 
     # download data and unzip
     urllib.request.urlretrieve(data_url, output_path)
