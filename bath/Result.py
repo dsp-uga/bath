@@ -1,6 +1,6 @@
 """
-Object-oriented interface for the results output by a model
-Includes convenience methods for computing accuracy combining many results, and writing results to a JSON file
+Object-oriented interface for the results output by a model on a single example
+Includes convenience methods for computing accuracy and converting the result to a dictionary
 """
 
 import json
