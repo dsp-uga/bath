@@ -14,7 +14,7 @@ from bath.Result import Result
 
 
 def main(datasets, base_dir, output_dir="output/nmf",
-         k=5, max_iter=20, percentile=99, overlap=0.1, chunk_size=(32, 32), padding=(20, 20), merge_iter=2):
+         k=5, max_iter=20, threshold=99, overlap=0.1, chunk_size=(32, 32), padding=(20, 20), merge_iter=2):
     """
     Performs neuron segementation using the NMF implementation provided by thunder-extraction
     Results will be written to <output_dir>/nmf-output.json
@@ -23,7 +23,7 @@ def main(datasets, base_dir, output_dir="output/nmf",
     :param base_dir: directory that contains the datasets
     :param output_dir: directory where output file should be written
     :param k: number of components to estimate per block
-    :param percentile: value for thresholding (higher means more thresholding)
+    :param threshold: value for thresholding (higher means more thresholding)
     :param overlap: value for determining whether to merge (higher means fewer merges)
     :param chunk_size: process images in chunks of this size
     :param padding: add this much padding to each chunk
@@ -34,7 +34,7 @@ def main(datasets, base_dir, output_dir="output/nmf",
     for dataset_name in datasets:
         dataset = preprocess.load(dataset_name, base_dir)
 
-        model = NMF(k=k, max_iter=max_iter, percentile=percentile, overlap=overlap)
+        model = NMF(k=k, max_iter=max_iter, percentile=threshold, overlap=overlap)
         model = model.fit(dataset.images, chunk_size=chunk_size, padding=padding)
         merged = model.merge(overlap=overlap, max_iter=merge_iter)
         regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
@@ -46,7 +46,5 @@ def main(datasets, base_dir, output_dir="output/nmf",
             f_score = result.f_score(dataset.true_regions)
             print("Combined score for dataset %s: %0.4f" % (dataset_name, f_score))
 
-    # TODO: write results to file
     postprocess.write_results(results, output_dir, name="nmf-output.json")
-
-main(datasets=["00.00"], base_dir="/media/zach/Elements/dsp-p3/")
+    return results
