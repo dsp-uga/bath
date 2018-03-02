@@ -42,6 +42,7 @@ def main():
     cmd.add_argument('-c', '--chunk_size', help='process images in chunks of this size; should be a comma-separated pair.', type=tuple)
     cmd.add_argument('-p', '--padding', help='add this much padding to each chunk; should be a comma-separated pair', type=tuple)
     cmd.add_argument('-i', '--merge_iter', help='number of iterations to perform when merging regions', type=int)
+    cmd.add_argument('-v', '--verbose', help='if set, print progress messages', action="store_true")
     cmd.set_defaults(func=bath.nmf.main)
 
     # Each subcommand gives an `args.func`.

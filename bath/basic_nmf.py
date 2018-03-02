@@ -13,7 +13,7 @@ from bath import preprocess, postprocess
 from bath.Result import Result
 
 
-def main(datasets, base_dir, output_dir="output/nmf",
+def main(datasets, base_dir, output_dir="output/nmf", verbose=False,
          k=5, max_iter=20, threshold=99, overlap=0.1, chunk_size=(32, 32), padding=(20, 20), merge_iter=2):
     """
     Performs neuron segementation using the NMF implementation provided by thunder-extraction
@@ -32,7 +32,9 @@ def main(datasets, base_dir, output_dir="output/nmf",
     """
     results = []
     for dataset_name in datasets:
+        if verbose: print("Processing dataset %s" % dataset_name)
         dataset = preprocess.load(dataset_name, base_dir)
+        if verbose: print("Dataset loaded.")
 
         model = NMF(k=k, max_iter=max_iter, percentile=threshold, overlap=overlap)
         model = model.fit(dataset.images, chunk_size=chunk_size, padding=padding)
@@ -42,9 +44,12 @@ def main(datasets, base_dir, output_dir="output/nmf",
         result = Result(name=dataset_name, regions=regions)
         results.append(result)
 
-        if dataset.has_ground_truth():
+        if verbose: print("Done with dataset %s" % dataset_name)
+
+        if dataset.has_ground_truth() and verbose:
             f_score = result.f_score(dataset.true_regions)
             print("Combined score for dataset %s: %0.4f" % (dataset_name, f_score))
 
+    if verbose: print("Writing results to %s" % output_dir)
     postprocess.write_results(results, output_dir, name="nmf-output.json")
     return results
