@@ -23,6 +23,13 @@ class Dataset(object):
         if len(self.images):
             self.shape = images[0].shape
 
+    def has_ground_truth(self):
+        """
+        Checks if this dataset has associated ground-truth regions
+        :return: True is ground-truth regions are read, False otherwise
+        """
+        return self.true_regions is not None
+
     def get_data(self):
         """
         Syntactic sugar for accessing self.images
