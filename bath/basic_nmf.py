@@ -8,13 +8,12 @@ The codeneuro localnmf example was also helpful:
 https://gist.github.com/freeman-lab/330183fdb0ea7f4103deddc9fae18113
 """
 
-import numpy as np
 from extraction import NMF
-from bath import preprocess
+from bath import preprocess, postprocess
 from bath.Result import Result
 
 
-def main(datasets, base_dir, output_dir="./output/nmf",
+def main(datasets, base_dir, output_dir="output/nmf",
          k=5, max_iter=20, percentile=99, overlap=0.1, chunk_size=(32, 32), padding=(20, 20), merge_iter=2):
     """
     Performs neuron segementation using the NMF implementation provided by thunder-extraction
@@ -48,6 +47,6 @@ def main(datasets, base_dir, output_dir="./output/nmf",
             print("Combined score for dataset %s: %0.4f" % (dataset_name, f_score))
 
     # TODO: write results to file
-
+    postprocess.write_results(results, output_dir, name="nmf-output.json")
 
 main(datasets=["00.00"], base_dir="/media/zach/Elements/dsp-p3/")
