@@ -54,5 +54,5 @@ class Result(object):
         """
         return {
             "dataset": self.name,
-            "regions": self.to_json()
+            "regions": self.raw_regions
         }
