@@ -1,12 +1,16 @@
 """
 The preprocess module contains several helper functions for loading and preprocessing sets of images
+
+Credit to
+https://github.com/codeneuro/neurofinder-python and https://github.com/freeman-lab/regional
+for loading of regions from json files
 """
 
 from skimage import io
 import numpy as np
 from glob import glob
 import os
-import json
+from neurofinder import load as load_regions
 
 from bath.Dataset import Dataset
 
@@ -40,15 +44,13 @@ def load(name, base_dir, greyscale=True):
     files = sorted(glob(file_pattern))
     images = np.array([io.imread(f, as_grey=greyscale) for f in files])
 
-    dataset = Dataset(name, images)
-
     # load regions if available
+    regions = None
     has_regions = os.path.exists(os.path.join(data_directory, 'regions'))
     if has_regions:
         regions_file = os.path.join(data_directory, 'regions', 'regions.json')
-        with open(regions_file) as file:
-            regions = json.load(file)
+        regions = load_regions(regions_file)
 
-        dataset.set_regions(regions)
+    dataset = Dataset(name, images, regions)
 
     return dataset

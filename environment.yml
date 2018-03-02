@@ -92,6 +92,8 @@ dependencies:
   - pip:
     - bolt-python==0.7.1
     - boto==2.48.0
+    - neurofinder==1.1.1
+    - regional==1.1.2
+    - thunder-extraction==1.2.1
     - thunder-python==1.4.2
     - tifffile==0.14.0
-

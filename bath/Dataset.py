@@ -1,6 +1,5 @@
 """
-Object-oriented interface for collections of images
-"""
+Object-oriented interface for collections of images"""
 
 import numpy as np
 
@@ -15,11 +14,11 @@ class Dataset(object):
 
         :param name: the name of the dataset (usually 00.00, 01.01, etc)
         :param images: an array of images represented as numpy ndarray
-        :param regions: optional array of dictionaries, each representing a segmented region-of-interest
+        :param regions: [Optional] ground truth-regions as loaded by neurofinder.load
         """
         self.name = name
         self.images = np.array(images)
-        self.regions = np.array(regions)
+        self.true_regions = regions
         self.shape = None
         if len(self.images):
             self.shape = images[0].shape
@@ -30,24 +29,3 @@ class Dataset(object):
         :return: array of images in this dataset
         """
         return self.images
-
-    def set_regions(self, regions):
-        """
-        Set the list of regions
-        :param regions: array of dictionaries, each representing a segmented region-of-interest
-        :return: None
-        """
-        self.regions = regions
-
-    def to_output(self):
-        """
-        Converts the Dataset object to a dictionary of the form
-        {
-            "dataset": <name>,
-            "regions": [{"coordinates": [[x, y], [x, y], ...]}, {"coordinates": [[x, y], [x, y], ...]}, ...]
-        }
-
-        :return: dict with keys "dataset" and "regions"
-        """
-        # TODO
-        pass
