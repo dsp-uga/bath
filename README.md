@@ -2,7 +2,7 @@
 
 Neuron Segmentation
 
-Bath is an experiment for the []neurofinder](http://neurofinder.codeneuro.org/) challenge.
+Bath is an experiment for the [neurofinder](http://neurofinder.codeneuro.org/) challenge.
 It was created over the course of three weeks for the Spring 2018 section of the
 CSCI 8360 Data Science Practicum course at the University of Georgia.
 
