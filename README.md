@@ -40,6 +40,22 @@ To display program args and help, run
 
 `python main.py -h`
 
+## Getting the data
+The `scripts/download.py` file can be used to download subsets of the neurofinder data.  Usage:
+
+`python download.py -d <datasets> -o <directory>`
+
+The `datasets` argument should be a space-separated list of names of the neurofinder datasets `00.00`, `00.01`, etc.
+See the [NeuroFinder website](http://neurofinder.codeneuro.org/) for details on which datasets are available.
+
+The `directory` argument specifies the directory on your local machine where the data will be downloaded.  
+If the directory doesn't exist then it will be created.
+
+The `scripts/download-full-dataset.sh` script can be used to download all the files used in this project.
+Usage:
+
+`./scripts/download-full-dataset.sh -o <directory>`
+
 ## Running the tests
 
 TODO
