@@ -102,3 +102,9 @@ ENV/
 
 # JetBrains IDE files
 .idea
+
+# output from models
+output
+
+# scripts for generating results
+scripts/nmf-test.sh
