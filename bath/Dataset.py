@@ -2,6 +2,7 @@
 Object-oriented interface for collections of images"""
 
 import numpy as np
+from skimage.color import rgb2gray
 
 
 class Dataset(object):
@@ -46,7 +47,8 @@ class Dataset(object):
         :return: binary mask of the ground truth regions, or zeros
         """
         if self.has_ground_truth():
-            mask = self.true_regions.mask(dims=self.shape)
+            regions = self.true_regions.mask(dims=self.shape, fill='white', stroke='white', background='black')
+            mask = rgb2gray(regions)
             return mask
         else:
             return np.zeros(self.shape)
