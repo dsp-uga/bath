@@ -20,7 +20,7 @@ for i in range(0,19):
 		im=cv2.resize(im,(512, 512))
 		for j in range(0,512):
 			for k in range(0,512):
-				if(im(j,k)>0):
+				if(im[j,k]>0):
 
 					var_to_add[j,k]=(((var_to_add[j,k])+(im[j,k]))/2.0)
 				
@@ -69,7 +69,7 @@ for i in range(1,10):
 		im=cv2.resize(im,(512, 512))
 		for j in range(0,512):
 			for k in range(0,512):
-				if(im(j,k)>0):
+				if(im[j,k]>0):
 
 					var_to_add[j,k]=(((var_to_add[j,k])+(im[j,k]))/2.0)
 				
