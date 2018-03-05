@@ -1,4 +1,49 @@
 
+# coding: utf-8
+
+# In[2]:
+
+
+import scipy as sp
+import scipy.misc, scipy.ndimage.interpolation
+from medpy import metric
+import numpy as np
+import os
+import tensorflow as tf
+from keras.models import Model
+from keras.layers import Input,merge, concatenate, Conv2D, MaxPooling2D, Activation, UpSampling2D,Dropout,Conv2DTranspose
+from keras.layers.normalization import BatchNormalization as bn
+from keras.callbacks import ModelCheckpoint, TensorBoard
+from keras.optimizers import RMSprop
+from keras import regularizers 
+from keras import backend as K
+from keras.optimizers import Adam
+from keras.callbacks import ModelCheckpoint
+import numpy as np 
+import nibabel as nib
+CUDA_VISIBLE_DEVICES = [0]
+os.environ['CUDA_VISIBLE_DEVICES']=','.join([str(x) for x in CUDA_VISIBLE_DEVICES])
+#oasis files 1-457
+
+path='/home/bahaa/oasis_mri/OAS1_'
+
+
+# In[3]:
+
+
+
+#Dice coeff
+smooth = 1.
+def dice_coef(y_true, y_pred):
+    y_true_f = K.flatten(y_true)
+    y_pred_f = K.flatten(y_pred)
+    intersection = K.sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
+
+def dice_coef_loss(y_true, y_pred):
+    return -dice_coef(y_true, y_pred)
+
 
 # In[7]:
 
@@ -158,5 +203,103 @@ def UNet(input_shape,learn_rate=1e-3):
 # In[8]:
 
 
-model=UNet(input_shape=(256,256,1))
+model=UNet(input_shape=(512,512,1))
 print(model.summary())
+
+
+# In[62]:
+
+
+
+
+X_train=np.load("X_train.npy")
+X_train=X_train.reshape(X_train.shape+(1,))
+y_train=np.load("y_train.npy").reshape(X_train.shape)
+print('done')
+
+
+
+
+# In[10]:
+
+
+
+
+
+#training network
+model.fit([X_train], [y_train],
+                    batch_size=2,
+                    nb_epoch=30,
+                    #validation_data=([X2_validate],[y_validate]),
+                    shuffle=True),
+                    #callbacks=[xyz],
+                    #class_weight=class_weightt)
+
+
+# In[29]:
+
+
+
+import h5py
+#model.save_weights("basic_unet_weights.h5")
+model.save('basic_unet_dsp_p3.h5')
+
+
+# In[30]:
+'''
+
+
+predicted=model.predict(X_test,batch_size=8)
+print('done')
+
+
+# In[35]:
+
+
+print(predicted.shape)
+
+
+# In[36]:
+
+
+import cv2
+for i in range(0,len(X_test)):
+    cv2.imwrite("large_section_output/"+str(i)+".png",y_test[i])
+    cv2.imwrite("large_section_predict/"+str(i)+".png",predicted[i])
+print ("done")
+    
+
+
+# In[49]:
+
+
+smooth=1
+def dice_calc(y_true, y_pred):
+    y_true_f = y_true.flatten()
+    y_pred_f = y_pred.flatten()
+    intersection = sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (sum(y_true_f) + sum(y_pred_f) + smooth)
+
+
+# In[50]:
+
+
+y_test=np.array(y_test)
+predicted=np.array(predicted)
+
+
+# In[51]:
+
+
+dice=0
+for i in range(0,len(X_test)):
+    dice=dice+dice_calc(y_test[i],predicted[i])
+print(dice)
+    
+
+
+# In[48]:
+
+
+print (dice/len(X_test))
+'''
