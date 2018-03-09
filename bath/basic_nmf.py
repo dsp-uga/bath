@@ -11,13 +11,14 @@ https://gist.github.com/freeman-lab/330183fdb0ea7f4103deddc9fae18113
 from extraction import NMF
 from bath import preprocess, postprocess
 from bath.Result import Result
+import numpy as np
 
 
-def main(datasets, base_dir, output_dir="output/nmf", verbose=False,
-         k=5, max_iter=20, threshold=99, overlap=0.1, chunk_size=(32, 32), padding=(20, 20), merge_iter=2):
+def main(datasets, base_dir, output_dir="output/nmf", gaussian_blur=0, verbose=False,
+         n_components=5, max_iter=20, threshold=99, overlap=0.1, chunk_size=(32, 32), padding=(20, 20), merge_iter=5):
     """
     Performs neuron segementation using the NMF implementation provided by thunder-extraction
-    Results will be written to <output_dir>/nmf-output.json
+    Results will be written to <output_dir>/00.00-output.json
 
     :param datasets: list of datasets (by name) to generate results for
     :param base_dir: directory that contains the datasets
@@ -36,9 +37,15 @@ def main(datasets, base_dir, output_dir="output/nmf", verbose=False,
         dataset = preprocess.load(dataset_name, base_dir)
         if verbose: print("Dataset loaded.")
 
-        model = NMF(k=k, max_iter=max_iter, percentile=threshold, overlap=overlap)
+        if gaussian_blur > 0:
+            chunks = np.array_split(dataset.images, 30)
+            summaries = np.array(list(map(preprocess.compute_summary, chunks)))
+            # summaries =
+            dataset.images = preprocess.gaussian_blur(summaries, gaussian_blur)
+
+        model = NMF(k=n_components, max_iter=max_iter, percentile=threshold, overlap=overlap, min_size=20)
         model = model.fit(dataset.images, chunk_size=chunk_size, padding=padding)
-        merged = model.merge(overlap=overlap, max_iter=merge_iter)
+        merged = model.merge(overlap=overlap, max_iter=merge_iter, k_nearest=20)
         regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
 
         result = Result(name=dataset_name, regions=regions)

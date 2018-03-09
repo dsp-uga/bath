@@ -6,7 +6,7 @@ https://github.com/codeneuro/neurofinder-python and https://github.com/freeman-l
 for loading of regions from json files
 """
 
-from skimage import io
+from skimage import io, filters
 import numpy as np
 from glob import glob
 import os
@@ -54,6 +54,11 @@ def load(name, base_dir, greyscale=True):
     dataset = Dataset(name, images, regions)
 
     return dataset
+
+
+def gaussian_blur(images, sigma):
+    blurred_images = np.array(list(map(lambda img, s=sigma: filters.gaussian(img, s), images)))
+    return blurred_images
 
 
 def compute_summary(images, type='mean'):
