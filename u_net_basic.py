@@ -1,12 +1,9 @@
 
 # coding: utf-8
 
-# In[2]:
-
 
 import scipy as sp
 import scipy.misc, scipy.ndimage.interpolation
-from medpy import metric
 import numpy as np
 import os
 import tensorflow as tf
@@ -20,12 +17,16 @@ from keras import backend as K
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
 import numpy as np 
-import nibabel as nib
-CUDA_VISIBLE_DEVICES = [0]
-os.environ['CUDA_VISIBLE_DEVICES']=','.join([str(x) for x in CUDA_VISIBLE_DEVICES])
-#oasis files 1-457
 
-path='/home/bahaa/oasis_mri/OAS1_'
+
+#default cuda device - 0 
+
+CUDA_VISIBLE_DEVICES = [0]
+
+os.environ['CUDA_VISIBLE_DEVICES']=','.join([str(x) for x in CUDA_VISIBLE_DEVICES])
+
+
+
 
 
 # In[3]:
@@ -43,9 +44,6 @@ def dice_coef(y_true, y_pred):
 # negative dice loss since we want the network to minimize it more
 def dice_coef_loss(y_true, y_pred):
     return -dice_coef(y_true, y_pred)
-
-
-# In[7]:
 
 
 
