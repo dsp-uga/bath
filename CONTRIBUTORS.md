@@ -1,8 +1,13 @@
 Raunak Dey:
-- TODO
+- U-Net implementation
+- Ensemble methods
+- Project Wiki
 
 Zach Jones:
-- TODO
+- NMF Implementation
+- Repository Management
+- Parameter Tuning
+- Project Wiki
 
 Niraj Kadam:
-- TODO
+- Code Reviews

@@ -8,7 +8,10 @@ CSCI 8360 Data Science Practicum course at the University of Georgia.
 
 ## Approach
 
-TODO
+We have included a Non-negative Matrix Factorization (NMF) model as the primary method of neuron segmentation.
+The included driver file allows the NMF model to be applied to any set of images.
+We also attempted an implementation of the [U-Net](https://arxiv.org/abs/1505.04597) deep learning architecture,
+but we never perfected it.  It is available as a standalone file in the `bath` package.
 
 ## Getting Started
 
@@ -55,30 +58,6 @@ The `scripts/download-full-dataset.sh` script can be used to download all the fi
 Usage:
 
 `./scripts/download-full-dataset.sh -o <directory>`
-
-## Running the tests
-
-TODO
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-TODO
 
 ## Built With
 
