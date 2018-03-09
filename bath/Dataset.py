@@ -4,7 +4,6 @@ Object-oriented interface for collections of images"""
 import numpy as np
 from skimage.color import rgb2gray
 
-
 class Dataset(object):
 
     def __init__(self, name, images, regions=None):

@@ -55,7 +55,6 @@ def load(name, base_dir, greyscale=True):
 
     return dataset
 
-
 def compute_summary(images, type='mean'):
     """
     Compute a summary image
