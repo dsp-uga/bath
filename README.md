@@ -88,4 +88,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 * [Dr. Shannon Quinn](https://github.com/magsol) for running the excellent DSP course at UGA and providing project guidance
 * [U-Net](https://arxiv.org/abs/1505.04597) - Neural Net architecture used in this project for segmentation
 * [Code NeuroFinder](http://neurofinder.codeneuro.org/) - Providing the datasets and lots of example code
+* [Freeman Labs Thunder Project](https://github.com/thunder-project/thunder) - Open source implementation of scalable image analysis and NMF-based segmenta
+* [Regional](https://github.com/freeman-lab/regional) - Open source library for working with regions of images
+
 
