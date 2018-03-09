@@ -30,7 +30,7 @@ path='/home/bahaa/oasis_mri/OAS1_'
 
 # In[3]:
 
-
+#Dice coefficient to calculate the intersection over union
 
 #Dice coeff
 smooth = 1.
@@ -40,7 +40,7 @@ def dice_coef(y_true, y_pred):
     intersection = K.sum(y_true_f * y_pred_f)
     return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
-
+# negative dice loss since we want the network to minimize it more
 def dice_coef_loss(y_true, y_pred):
     return -dice_coef(y_true, y_pred)
 
@@ -48,7 +48,6 @@ def dice_coef_loss(y_true, y_pred):
 # In[7]:
 
 
-#define the model
 
 #define the model
 def UNet(input_shape,learn_rate=1e-3):
@@ -202,104 +201,62 @@ def UNet(input_shape,learn_rate=1e-3):
 
 # In[8]:
 
-
-model=UNet(input_shape=(512,512,1))
-print(model.summary())
-
-
-# In[62]:
-
-
-
-
-X_train=np.load("X_train.npy")
-X_train=X_train.reshape(X_train.shape+(1,))
-y_train=np.load("y_train.npy").reshape(X_train.shape)
-print('done')
+# creates a basic u-net based on 
+#@inproceedings{ronneberger2015u,
+#  title={U-net: Convolutional networks for biomedical image segmentation},
+#  author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+#  booktitle={International Conference on Medical image computing and computer-assisted intervention},
+#  pages={234--241},
+#  year={2015},
+#  organization={Springer}
+#}
+import sys
+if __name__ == "__main__":
 
 
-
-
-# In[10]:
-
-
-
-
-
-#training network
-model.fit([X_train], [y_train],
-                    batch_size=2,
-                    nb_epoch=30,
-                    #validation_data=([X2_validate],[y_validate]),
-                    shuffle=True),
-                    #callbacks=[xyz],
-                    #class_weight=class_weightt)
-
-
-# In[29]:
-
-
-
-import h5py
-#model.save_weights("basic_unet_weights.h5")
-model.save('basic_unet_dsp_p3.h5')
-
-
-# In[30]:
-'''
-
-
-predicted=model.predict(X_test,batch_size=8)
-print('done')
-
-
-# In[35]:
-
-
-print(predicted.shape)
-
-
-# In[36]:
-
-
-import cv2
-for i in range(0,len(X_test)):
-    cv2.imwrite("large_section_output/"+str(i)+".png",y_test[i])
-    cv2.imwrite("large_section_predict/"+str(i)+".png",predicted[i])
-print ("done")
     
+    if len(sys.argv) !=7:
+        print("Usage: u_net_basic.py <input_array> <ground_truth_array> <test_array> <epochs to train> <batch_size> <enter directory to save output images>")
+        exit(-1)
+
+    model=UNet(input_shape=(512,512,1))
+    print(model.summary())
 
 
-# In[49]:
+    # In[62]:
 
 
-smooth=1
-def dice_calc(y_true, y_pred):
-    y_true_f = y_true.flatten()
-    y_pred_f = y_pred.flatten()
-    intersection = sum(y_true_f * y_pred_f)
-    return (2. * intersection + smooth) / (sum(y_true_f) + sum(y_pred_f) + smooth)
+
+    # accepts input array and ground truth and reshapes it to (n,512,512,1) where n is the number of input slices
+
+    X_train=np.load(str(sys.argv[1]))
+    X_train=X_train.reshape(X_train.shape+(1,))
+    y_train=np.load(str(sys.argv[2])).reshape(X_train.shape)
+    epochs_x=(int)(sys.argv[4])
+    print('done')
+
+    batchsize=(int)(sys.argv[5])
+    path=(str)(sys.argv[6])
+    #training network using keras's model.fit api
+    model.fit([X_train], [y_train],
+                        batch_size=batchsize,
+                        nb_epoch=epochs_x,
+                        shuffle=True),
+                       
 
 
-# In[50]:
+    #load the testing array and save the output as numpy array as well as generate a list of .png files 
+    X_train=np.load(str(sys.argv[3]))
+    X_train=X_train.reshape(X_train.shape+(1,))
+    predict=model.predict([X_train],batch_size=4)
+    for i in range(0,len(predict)):
+        cv2.imwrite(path+"\predicted"+str(i)+".png",predict[i]*255)
+
+    np.save("predicted",predict)
 
 
-y_test=np.array(y_test)
-predicted=np.array(predicted)
 
+    #saves model to file
+    import h5py
 
-# In[51]:
-
-
-dice=0
-for i in range(0,len(X_test)):
-    dice=dice+dice_calc(y_test[i],predicted[i])
-print(dice)
-    
-
-
-# In[48]:
-
-
-print (dice/len(X_test))
-'''
+    model.save('basic_unet_dsp_p3.h5')
