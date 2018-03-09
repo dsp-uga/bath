@@ -54,3 +54,37 @@ def load(name, base_dir, greyscale=True):
     dataset = Dataset(name, images, regions)
 
     return dataset
+
+def compute_summary(images, type='mean'):
+    """
+    Compute a summary image
+    Type should be one of 'mean', 'max', or 'min'
+
+    :param images: t x w x h ndarray of images
+    :param type: the type of summary to compute ['mean', 'max', 'min']
+    :return: a single w x h array representing the resulting image
+    """
+    if type == 'mean':
+        result = images.sum(axis=0) / images.shape[0]
+    elif type == 'max':
+        result = np.amax(images, axis=0)
+    elif type == 'min':
+        result = np.amin(images, axis=0)
+    else:
+        result = images[0]
+
+    return result
+
+
+def normalize(image):
+    """
+    Normalizes an image by subtracting the mean and dividing by the standard deviation
+
+    :param image: w x h ndarray representing the image to normalize
+    :return: w x h ndarray representing the normalized image
+    """
+    mean = image.sum() / (image.shape[0] + image.shape[1])
+    sigma = np.std(image)
+    normalized = (image - mean) / sigma
+
+    return normalized
