@@ -1,7 +1,3 @@
-
-# coding: utf-8
-
-
 import scipy as sp
 import scipy.misc, scipy.ndimage.interpolation
 import numpy as np
@@ -16,50 +12,14 @@ from keras import regularizers
 from keras import backend as K
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
-import numpy as np 
+import numpy as np
+import sys
+import h5py
 
-
-
-
-# creates a basic u-net based on 
-#@inproceedings{ronneberger2015u,
-#  title={U-net: Convolutional networks for biomedical image segmentation},
-#  author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
-#  booktitle={International Conference on Medical image computing and computer-assisted intervention},
-#  pages={234--241},
-#  year={2015},
-#  organization={Springer}
-#}
-
-#batch normalization 
-#@inproceedings{ioffe2015batch,
-#  title={Batch normalization: Accelerating deep network training by reducing internal covariate shift},
-#  author={Ioffe, Sergey and Szegedy, Christian},
-#  booktitle={International conference on machine learning},
-#  pages={448--456},
-#  year={2015}
-#}
-
-#Main deep learning API library used Keras - 
-#@misc{chollet2015keras,
-#  title={Keras},
-#  author={Chollet, Fran\c{c}ois and others},
-#  year={2015},
-#  publisher={GitHub},
-#  howpublished={\url{https://github.com/keras-team/keras}},
-#}
-
-#default cuda device - 0 
 
 CUDA_VISIBLE_DEVICES = [0]
 
 os.environ['CUDA_VISIBLE_DEVICES']=','.join([str(x) for x in CUDA_VISIBLE_DEVICES])
-
-
-
-
-
-# In[3]:
 
 #Dice coefficient to calculate the intersection over union
 
@@ -71,13 +31,13 @@ def dice_coef(y_true, y_pred):
     intersection = K.sum(y_true_f * y_pred_f)
     return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
 
+
 # negative dice loss since we want the network to minimize it more
 def dice_coef_loss(y_true, y_pred):
     return -dice_coef(y_true, y_pred)
 
 
-
-#define the model
+# define the model
 # each u net block is a series of two convolution operations followed by batch normalization
 # after each block we use a dropout of 0.3
 # In total the downsample and upsample blocks have 6 layers each with an intermediate transition block of  2 convolution layers with 512 feature maps
@@ -227,25 +187,15 @@ def UNet(input_shape,learn_rate=1e-3):
     model = Model(inputs=inputs, outputs=conv10)
     model.compile(optimizer=Adam(lr=1e-5), loss=dice_coef_loss, metrics=[dice_coef])
     return model
- 
 
 
-import sys
 if __name__ == "__main__":
-
-
-    
     if len(sys.argv) !=7:
         print("Usage: u_net_basic.py <input_array> <ground_truth_array> <test_array> <epochs to train> <batch_size> <enter directory to save output images>")
         exit(-1)
 
     model=UNet(input_shape=(512,512,1))
     print(model.summary())
-
-
-    # In[62]:
-
-
 
     # accepts input array and ground truth and reshapes it to (n,512,512,1) where n is the number of input slices
 
@@ -265,7 +215,7 @@ if __name__ == "__main__":
                        
 
 
-    #load the testing array and save the output as numpy array as well as generate a list of .png files 
+    #load the testing array and save the output as numpy array as well as generate a list of .png files
     X_train=np.load(str(sys.argv[3]))
     X_train=X_train.reshape(X_train.shape+(1,))
     predict=model.predict([X_train],batch_size=4)
@@ -274,9 +224,5 @@ if __name__ == "__main__":
 
     np.save("predicted",predict)
 
-
-
-    #saves model to file
-    import h5py
-
+    # saves model to file
     model.save('basic_unet_dsp_p3.h5')
