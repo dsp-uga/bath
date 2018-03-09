@@ -50,6 +50,9 @@ def dice_coef_loss(y_true, y_pred):
 
 
 #define the model
+# each u net block is a series of two convolution operations followed by batch normalization
+# after each block we use a dropout of 0.3
+# In total the downsample and upsample blocks have 6 layers each with an intermediate transition block of  2 convolution layers with 512 feature maps
 def UNet(input_shape,learn_rate=1e-3):
     l2_lambda = 0.0002
     DropP = 0.3
