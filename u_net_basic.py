@@ -19,6 +19,36 @@ from keras.callbacks import ModelCheckpoint
 import numpy as np 
 
 
+
+
+# creates a basic u-net based on 
+#@inproceedings{ronneberger2015u,
+#  title={U-net: Convolutional networks for biomedical image segmentation},
+#  author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+#  booktitle={International Conference on Medical image computing and computer-assisted intervention},
+#  pages={234--241},
+#  year={2015},
+#  organization={Springer}
+#}
+
+#batch normalization 
+#@inproceedings{ioffe2015batch,
+#  title={Batch normalization: Accelerating deep network training by reducing internal covariate shift},
+#  author={Ioffe, Sergey and Szegedy, Christian},
+#  booktitle={International conference on machine learning},
+#  pages={448--456},
+#  year={2015}
+#}
+
+#Main deep learning API library used Keras - 
+#@misc{chollet2015keras,
+#  title={Keras},
+#  author={Chollet, Fran\c{c}ois and others},
+#  year={2015},
+#  publisher={GitHub},
+#  howpublished={\url{https://github.com/keras-team/keras}},
+#}
+
 #default cuda device - 0 
 
 CUDA_VISIBLE_DEVICES = [0]
@@ -200,17 +230,6 @@ def UNet(input_shape,learn_rate=1e-3):
  
 
 
-# In[8]:
-
-# creates a basic u-net based on 
-#@inproceedings{ronneberger2015u,
-#  title={U-net: Convolutional networks for biomedical image segmentation},
-#  author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
-#  booktitle={International Conference on Medical image computing and computer-assisted intervention},
-#  pages={234--241},
-#  year={2015},
-#  organization={Springer}
-#}
 import sys
 if __name__ == "__main__":
 
